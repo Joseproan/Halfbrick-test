@@ -213,13 +213,12 @@ public class Player : MonoSingleton<Player>
 
     void KnockUp()
     {
-        Debug.Log("ola");
         // Calcula la dirección de retroceso desde el punto de ataque hacia el jugador
         Vector2 knockbackDirection = (transform.position - new Vector3(_playerHealth.attackPosition.x, _playerHealth.attackPosition.y)).normalized;
 
         // Aplica el retroceso usando la dirección calculada y la fuerza del retroceso
-        m_vel.x = knockbackDirection.x * 1;
-        m_vel.y = knockbackDirection.y * 1;
+        m_vel.x = knockbackDirection.x * 0.75f;
+        m_vel.y = knockbackDirection.y * 0.75f;
 
         ApplyVelocity();
     

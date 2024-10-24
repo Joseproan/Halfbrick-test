@@ -18,6 +18,8 @@ public class PlayerHealth : MonoBehaviour
     internal Vector3 attackPosition;
     private float pushForce;
     private Player _player;
+
+    [SerializeField] private CameraShake _cameraShake;
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -59,6 +61,7 @@ public class PlayerHealth : MonoBehaviour
     public void ReceiveDamage(int damage)
     {
         health -= damage;
+        _cameraShake.ShakeCamera();
         invencibleTimer = inmuneTime;
     }
 

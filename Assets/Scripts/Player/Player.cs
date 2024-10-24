@@ -27,13 +27,14 @@ public class Player : MonoSingleton<Player>
     private float m_stateTimer = 0.0f;
     private Vector2 m_vel = new Vector2(0, 0);
     private List<GameObject> m_groundObjects = new List<GameObject>();
-
+    private PlayerHealth _playerHealth;
     private enum State
     {
         Idle = 0,
         Falling,
         Jumping,
-        Walking
+        Walking,
+        Knock
     };
 
     private State m_state = State.Idle;
@@ -41,6 +42,7 @@ public class Player : MonoSingleton<Player>
     // Use this for initialization
     void Start ()
     {
+        _playerHealth = this.GetComponent<PlayerHealth>();
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
     }
 
@@ -75,6 +77,9 @@ public class Player : MonoSingleton<Player>
             case State.Walking:
                 Walking();
                 break;
+            case State.Knock:
+                KnockUp();
+                break;
             default:
                 break;
         }
@@ -87,6 +92,7 @@ public class Player : MonoSingleton<Player>
         {
             m_fireRight = false;
         }
+        if(_playerHealth.pushBack) m_state = State.Knock;
     }
 
     public void GiveWeapon()
@@ -205,6 +211,39 @@ public class Player : MonoSingleton<Player>
         }
     }
 
+    void KnockUp()
+    {
+        Debug.Log("ola");
+        // Calcula la dirección de retroceso desde el punto de ataque hacia el jugador
+        Vector2 knockbackDirection = (transform.position - new Vector3(_playerHealth.attackPosition.x, _playerHealth.attackPosition.y)).normalized;
+
+        // Aplica el retroceso usando la dirección calculada y la fuerza del retroceso
+        m_vel.x = knockbackDirection.x * 1;
+        m_vel.y = knockbackDirection.y * 1;
+
+        ApplyVelocity();
+    
+        // Si quieres que el retroceso tenga un tiempo limitado, puedes usar un temporizador
+        StartCoroutine(EndKnockbackAfterDelay(0.2f)); // 0.2f es la duración del retroceso
+    }
+    IEnumerator EndKnockbackAfterDelay(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _playerHealth.pushBack = false;
+        // Detiene el retroceso restableciendo la velocidad a cero
+        m_vel = Vector2.zero;
+
+        // Después del retroceso, puede volver al estado adecuado, como Idle o Walking
+        if (m_groundObjects.Count > 0)
+        {
+            m_state = State.Idle; // Si está en el suelo
+        }
+        else
+        {
+            m_state = State.Falling; // Si está en el aire
+        }
+    }
+    
     void ApplyVelocity()
     {
         Vector3 pos = m_rigidBody.transform.position;

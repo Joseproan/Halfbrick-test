@@ -8,14 +8,18 @@ using static UnityEngine.GraphicsBuffer;
 public class Player : MonoSingleton<Player>
 {
     public float m_moveAccel = (0.12f * 60.0f);
+    public float accelSmoothing = 3f; 
     public float m_groundFriction = 0.85f;
     public float m_gravity = (-0.05f * 60.0f);
+    public float jumpgravity = (-0.05f * 60.0f);
     public float m_jumpVel = 0.75f;
     public float m_jumpMinTime = 0.06f;
     public float m_jumpMaxTime = 0.20f;
     public float m_airFallFriction = 0.975f;
     public float m_airMoveFriction = 0.85f;
-
+    public float timeFallForShake = 0.2f;
+    public CameraShake _cameraShake;
+    
     private Rigidbody2D m_rigidBody = null;
     private bool m_jumpPressed = false;
     private bool m_jumpHeld = false;
@@ -28,6 +32,7 @@ public class Player : MonoSingleton<Player>
     private Vector2 m_vel = new Vector2(0, 0);
     private List<GameObject> m_groundObjects = new List<GameObject>();
     private PlayerHealth _playerHealth;
+    private float timerFall;
     private enum State
     {
         Idle = 0,
@@ -44,6 +49,7 @@ public class Player : MonoSingleton<Player>
     {
         _playerHealth = this.GetComponent<PlayerHealth>();
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
+        timerFall = 0.1f;
     }
 
     private void Update()
@@ -127,8 +133,9 @@ public class Player : MonoSingleton<Player>
         }
     }
 
-    void Falling()
+    void  Falling()
     {
+        timerFall += Time.deltaTime;
         m_vel.y += m_gravity * Time.fixedDeltaTime;
         m_vel.y *= m_airFallFriction;
         if (m_wantsLeft)
@@ -147,6 +154,7 @@ public class Player : MonoSingleton<Player>
 
     void Jumping()
     {
+        timerFall = 0f;
         m_stateTimer += Time.fixedDeltaTime;
 
         if (m_stateTimer < m_jumpMinTime || (m_jumpHeld && m_stateTimer < m_jumpMaxTime))
@@ -154,41 +162,71 @@ public class Player : MonoSingleton<Player>
             m_vel.y = m_jumpVel;
         }
 
-        m_vel.y += m_gravity * Time.fixedDeltaTime;
+        m_vel.y += jumpgravity * Time.fixedDeltaTime;
 
         if (m_vel.y <= 0)
         {
             m_state = State.Falling;
         }
 
+        
         if (m_wantsLeft)
         {
-            m_vel.x -= m_moveAccel * Time.fixedDeltaTime;
+            if (currentAccel < m_moveAccel / 2)
+            {
+                currentAccel = -m_moveAccel / 2.5f;
+                m_vel.x += currentAccel * Time.fixedDeltaTime;
+            }
+            else
+            {
+                m_vel.x += currentAccel * Time.fixedDeltaTime;
+            }
+            
         }
         else if (m_wantsRight)
         {
-            m_vel.x += m_moveAccel * Time.fixedDeltaTime;
+            if (currentAccel < m_moveAccel / 2) currentAccel = m_moveAccel / 2.5f;
+            m_vel.x += currentAccel * Time.fixedDeltaTime;
         }
 
         m_vel.x *= m_airMoveFriction;
 
         ApplyVelocity();
     }
-
+    private float currentAccel = 0f;
     void Walking()
     {
         if (m_wantsLeft)
         {
-            m_vel.x -= m_moveAccel * Time.fixedDeltaTime;
+            if (currentAccel > 0)
+            {
+                currentAccel = 0f;  // Resetear la aceleración si cambia de dirección
+            }
+            // Usamos Lerp para hacer que la aceleración hacia la izquierda sea gradual
+            currentAccel = Mathf.Lerp(currentAccel, -m_moveAccel, Time.fixedDeltaTime * accelSmoothing);
+            
+            m_vel.x += currentAccel * Time.fixedDeltaTime;
         }
         else if (m_wantsRight)
         {
-            m_vel.x += m_moveAccel * Time.fixedDeltaTime;
+            if (currentAccel < 0)
+            {
+                currentAccel = 0f;  // Resetear la aceleración si cambia de dirección
+            }
+            // Usamos Lerp para hacer que la aceleración hacia la derecha sea gradual
+            currentAccel = Mathf.Lerp(currentAccel, m_moveAccel, Time.fixedDeltaTime * accelSmoothing);
+            m_vel.x += currentAccel * Time.fixedDeltaTime;
         }
         else if (m_vel.x >= -0.05f && m_vel.x <= 0.05)
         {
             m_state = State.Idle;
             m_vel.x = 0;
+            currentAccel = 0f;
+        }
+        else
+        {
+            m_vel.x = 0;
+            currentAccel = 0f;
         }
 
         m_vel.y = 0;
@@ -307,6 +345,13 @@ public class Player : MonoSingleton<Player>
                         {
                             m_state = State.Idle;
                         }
+
+                        if (timerFall >= timeFallForShake)
+                        {
+                            _cameraShake.ShakeCamera();
+                            timerFall = 0f;
+                        }
+                        
                     }
                 }
                 //Hit Roof

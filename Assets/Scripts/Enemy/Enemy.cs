@@ -14,13 +14,15 @@ public class Enemy : MonoBehaviour
     public float m_maxHealth = 4.0f;
 
     public Player m_player = null;
-
+    public EnemyWeakPoint _enemyWeakPoint;
+    
     private Rigidbody2D m_rigidBody = null;
     private float m_health = 100.0f;
     private float m_timer = 0.0f;
     private float m_lastPlayerDiff = 0.0f;
     private Vector2 m_vel = new Vector2(0, 0);
 
+    
     private enum WallCollision
     {
         None = 0,

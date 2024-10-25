@@ -1,15 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressurePad : MonoBehaviour {
+public class PressurePad : MonoBehaviour
+{
 
-    private SpriteRenderer m_sprite = null;
-    private Color m_defaultColor = new Color();
+	private float bounce = 20f;
+
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		if (other.gameObject.CompareTag("Player"))
+		{
+			
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
-        m_sprite = transform.GetComponent<SpriteRenderer>();
-        m_defaultColor = m_sprite.color;
+        
     }
 	
 	// Update is called once per frame
@@ -17,13 +26,4 @@ public class PressurePad : MonoBehaviour {
 		
 	}
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        m_sprite.color = new Color(m_defaultColor.r / 2, m_defaultColor.g / 2, m_defaultColor.b / 2, 1);
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        m_sprite.color = m_defaultColor;
-    }
 }

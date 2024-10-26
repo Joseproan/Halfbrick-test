@@ -6,29 +6,41 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [Header("Player Health stats")]
     private Rigidbody2D rb;
     [SerializeField] private int maxHealth;
     private int health;
     
     [SerializeField] private float inmuneTime = 0.1f;
     internal float invencibleTimer;
-    
+
+    [Header("Attacker stats")]
     private GameObject lastAttacker;
     internal bool pushBack;
     internal Vector3 attackPosition;
     private float pushForce;
     private Player _player;
 
-    [SerializeField] private CameraShake _cameraShake;
+    [Header("Feedback damage")]
+    private SpriteRenderer playerRenderer;
+    private Color mainColor;
+    [SerializeField] Color damagedColor;
+    [SerializeField] float hitColorDuration;
+
+    private GameManager gameManager;
+
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
         _player = GetComponent<Player>();
+        playerRenderer = GetComponent<SpriteRenderer>();
+        mainColor = playerRenderer.color;
     }
 
     void Start()
     {
         health = maxHealth;
+        gameManager = GameManager.instance;
     }
     
     void Update()
@@ -36,14 +48,18 @@ public class PlayerHealth : MonoBehaviour
         if (invencibleTimer >= 0) invencibleTimer -= Time.deltaTime;
         Die();
     }
-    
-    private void FixedUpdate()
-    {
-        if (pushBack)
-        {
-          
-        }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Enemy") && invencibleTimer <= 0)
+        {
+            EnemyDamage enemyDamage = collision.gameObject.GetComponent<EnemyDamage>();
+            lastAttacker = enemyDamage.owner;
+            attackPosition = enemyDamage.owner.transform.position;
+            pushBack = true;
+            pushForce = enemyDamage.pushForce;
+            ReceiveDamage(enemyDamage.damage);
+        }
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -61,13 +77,23 @@ public class PlayerHealth : MonoBehaviour
     public void ReceiveDamage(int damage)
     {
         health -= damage;
-        _cameraShake.ShakeCamera();
+        StartCoroutine(DamagedColor());
         invencibleTimer = inmuneTime;
     }
 
     public void Die()
     {
-        if (health <= 0) SceneManager.LoadScene("Scenes/Game");
-        
+        if (health <= 0)
+        {
+            gameManager.playerDeath = true;
+            Destroy(this.gameObject);
+        }
+    }
+
+    public IEnumerator DamagedColor()
+    {
+        playerRenderer.color = damagedColor;
+        yield return new WaitForSeconds(hitColorDuration);
+        playerRenderer.color = mainColor;
     }
 }

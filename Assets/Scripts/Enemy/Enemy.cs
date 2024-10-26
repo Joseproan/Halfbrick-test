@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 public class Enemy : MonoBehaviour
 {
+    private GameManager gameManager;
     public float m_moveSpeed = (0.05f * 60.0f);
     public float m_changeSpeed = 0.2f * 60.0f;
     public float m_moveDuration = 3.0f;
@@ -45,8 +46,16 @@ public class Enemy : MonoBehaviour
     {
         m_health = m_maxHealth;
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
+        gameManager = GameManager.instance;
     }
 
+    private void Update()
+    {
+        if(m_player == null)
+        {
+            m_player = gameManager.playerClone.GetComponent<Player>();
+        }
+    }
     // Update is called once per frame
     void FixedUpdate()
     {

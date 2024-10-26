@@ -18,7 +18,7 @@ public class Player : MonoSingleton<Player>
     public float m_airFallFriction = 0.975f;
     public float m_airMoveFriction = 0.85f;
     public float timeFallForShake = 0.2f;
-    public CameraShake _cameraShake;
+    private CameraShake _cameraShake;
     
     private Rigidbody2D m_rigidBody = null;
     private bool m_jumpPressed = false;
@@ -49,6 +49,7 @@ public class Player : MonoSingleton<Player>
     {
         _playerHealth = this.GetComponent<PlayerHealth>();
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
+        _cameraShake = GameObject.Find("VirtualCamera").GetComponent<CameraShake>();
         timerFall = 0.1f;
     }
 

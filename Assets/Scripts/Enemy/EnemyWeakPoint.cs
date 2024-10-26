@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class EnemyWeakPoint : MonoBehaviour
 {
-    [HideInInspector] public bool weakPoint;
+    private GameManager gameManager;
 
+    [HideInInspector] public bool weakPoint;
+    public EnemyDamage enemyDamage;
+    private void Start()
+    {
+        gameManager = GameManager.instance;
+    }
     public void SetEnemyWeakPoint(bool activate)
     {
         weakPoint = activate;
@@ -17,7 +23,9 @@ public class EnemyWeakPoint : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             SetEnemyWeakPoint(true);
-            Debug.Log(weakPoint);
+            enemyDamage.enabled = false;
+            gameManager.enemyKilled = true;
+            Destroy(enemyDamage.gameObject);
         }
     }
 }

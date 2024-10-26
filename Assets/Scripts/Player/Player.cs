@@ -33,13 +33,34 @@ public class Player : MonoSingleton<Player>
     private List<GameObject> m_groundObjects = new List<GameObject>();
     private PlayerHealth _playerHealth;
     private float timerFall;
+
+    [Header("Trampolin")]
+    // Variables de tiempo y estado
+    private float trampolineFallTimer = 0f;
+    private float m_trampolineStateTimer = 0f;
+    private bool hasBouncedOnce = false;
+
+    // Velocidad y gravedad del trampolín
+    public float trampolineJumpVel = 15f; // Velocidad de salto inicial desde el trampolín
+    public float trampolineGravity = -9.8f; // Gravedad aplicada en el aire desde el trampolín
+
+    // Aceleración y fricción en el aire
+    public float trampolineMoveAccel = 5f; // Aceleración horizontal mientras está en el aire desde el trampolín
+    public float trampolineAirMoveFriction = 0.9f; // Fricción en el aire para reducir la velocidad horizontal
+
+    // Tiempos mínimos y máximos de salto
+    public float m_trampolineJumpMinTime = 0.2f; // Tiempo mínimo de salto en el trampolín
+    public float m_trampolineJumpMaxTime = 0.5f; // Tiempo máximo de salto en el trampolín
+
+    PressurePad trampoline;
     private enum State
     {
         Idle = 0,
         Falling,
         Jumping,
         Walking,
-        Knock
+        Knock,
+        Trampolin
     };
 
     private State m_state = State.Idle;
@@ -87,6 +108,9 @@ public class Player : MonoSingleton<Player>
             case State.Knock:
                 KnockUp();
                 break;
+            case State.Trampolin:
+                TrampolineJumping();
+                break;
             default:
                 break;
         }
@@ -100,6 +124,11 @@ public class Player : MonoSingleton<Player>
             m_fireRight = false;
         }
         if(_playerHealth.pushBack) m_state = State.Knock;
+        if(trampoline != null && trampoline.startJump)
+        {
+
+            Debug.Log("enr");
+        }
     }
 
     public void GiveWeapon()
@@ -195,6 +224,52 @@ public class Player : MonoSingleton<Player>
         ApplyVelocity();
     }
     private float currentAccel = 0f;
+
+    // Variables de rebote
+    public float bounceMultiplier = 1.2f; // Multiplicador para ajustar la fuerza del rebote
+    public float maxBounceVelocity = 20f; // Velocidad máxima de rebote para evitar saltos excesivos
+
+    void TrampolineJumping()
+    {
+        trampolineFallTimer = 0f;
+        m_trampolineStateTimer += Time.fixedDeltaTime;
+
+        // Ajusta la gravedad del trampolín
+        m_vel.y += trampolineGravity * Time.fixedDeltaTime;
+
+        if (m_vel.y <= 0)
+        {
+            m_state = State.Falling; // Cambia el estado a caída cuando el rebote ha terminado
+        }
+
+        // Movimiento horizontal mientras está en el aire desde el trampolín
+        if (m_wantsLeft)
+        {
+            if (currentAccel < trampolineMoveAccel / 2)
+            {
+                currentAccel = -trampolineMoveAccel / 2.5f;
+                m_vel.x += currentAccel * Time.fixedDeltaTime;
+            }
+            else
+            {
+                m_vel.x += currentAccel * Time.fixedDeltaTime;
+            }
+        }
+        else if (m_wantsRight)
+        {
+            if (currentAccel < trampolineMoveAccel / 2)
+            {
+                currentAccel = trampolineMoveAccel / 2.5f;
+            }
+            m_vel.x += currentAccel * Time.fixedDeltaTime;
+        }
+
+        // Fricción en el aire desde el trampolín (ajusta según lo necesario)
+        m_vel.x *= trampolineAirMoveFriction;
+
+        ApplyVelocity();
+    }
+
     void Walking()
     {
         if (m_wantsLeft)
@@ -302,6 +377,26 @@ public class Player : MonoSingleton<Player>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ProcessCollision(collision);
+
+        if (collision.gameObject.CompareTag("Trampoline"))
+        {
+            trampoline = collision.gameObject.GetComponent<PressurePad>();
+            trampoline.onTrampoline = true;
+            m_state = State.Trampolin; // Cambia el estado al usar el trampolín
+            m_trampolineStateTimer = 0f;       // Reinicia el temporizador de estado del trampolín
+
+            // Calcula la velocidad de rebote en función de la velocidad de caída
+            float bounceVelocity = Mathf.Abs(m_vel.y) * bounceMultiplier;
+
+            // Limita la velocidad de rebote para evitar saltos excesivos
+            bounceVelocity = Mathf.Min(bounceVelocity, maxBounceVelocity);
+
+            // Aplica la velocidad de rebote
+            m_vel.y = bounceVelocity;
+
+            trampoline.startJump = false;
+            TrampolineJumping();
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)

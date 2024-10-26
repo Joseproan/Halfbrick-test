@@ -156,7 +156,6 @@ MonoBehaviour:
   m_airFallFriction: 0.975
   m_airMoveFriction: 0.89
   timeFallForShake: 0.275
-  _cameraShake: {fileID: 0}
 --- !u!50 &1585078404650111102
 Rigidbody2D:
   serializedVersion: 4
@@ -200,3 +199,5 @@ MonoBehaviour:
   inmuneTime: 0.5
   damagedColor: {r: 1, g: 0, b: 0, a: 1}
   hitColorDuration: 0.2
+  deathEffect: {fileID: 1688076354444117600, guid: ffb1fec1df5ce4b40a942910b06efd5f,
+    type: 3}

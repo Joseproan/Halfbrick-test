@@ -27,6 +27,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] Color damagedColor;
     [SerializeField] float hitColorDuration;
 
+    [SerializeField] private GameObject deathEffect;
+
     private GameManager gameManager;
 
     private void Awake()
@@ -85,6 +87,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (health <= 0)
         {
+            Instantiate(deathEffect,transform.position, Quaternion.identity);
             gameManager.playerDeath = true;
             Destroy(this.gameObject);
         }

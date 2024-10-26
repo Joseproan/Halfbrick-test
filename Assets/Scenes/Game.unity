@@ -1186,14 +1186,14 @@ MonoBehaviour:
   m_airMoveFriction: 0.89
   timeFallForShake: 0.275
   trampolineJumpVel: 2
-  trampolineGravity: -9.8
+  trampolineGravity: -5
   trampolineMoveAccel: 5
   trampolineAirMoveFriction: 0.9
   m_trampolineJumpMinTime: 0.2
   m_trampolineJumpMaxTime: 0.5
   tranpolineCooldown: 1
-  bounceMultiplier: 5
-  maxBounceVelocity: 2.5
+  bounceMultiplier: 1.3
+  maxBounceVelocity: 10
 --- !u!61 &679829337
 BoxCollider2D:
   m_ObjectHideFlags: 0

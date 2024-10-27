@@ -62,7 +62,10 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-     
+        if (m_player == null)
+        {
+            m_player = gameManager.playerClone.GetComponent<Player>();
+        }
     }
     // Update is called once per frame
     void FixedUpdate()

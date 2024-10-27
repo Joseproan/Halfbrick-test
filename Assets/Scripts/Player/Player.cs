@@ -53,6 +53,7 @@ public class Player : MonoSingleton<Player>
     public float m_trampolineJumpMaxTime = 0.5f; // Tiempo máximo de salto en el trampolín
     float bounceVelocity;
     PressurePad trampoline;
+    private bool onTrampoline = false;
 
     [SerializeField] private float tranpolineCooldown = 1f;
     private float tranpolinTimer;
@@ -141,8 +142,9 @@ public class Player : MonoSingleton<Player>
 
             // Aplica la lógica de rebote usando la velocidad guardada
             m_vel.y = bounceVelocity;
-            TrampolineJumping();
-            Debug.Log("Rebote ejecutado con velocidad: " + bounceVelocity);
+            if(onTrampoline) TrampolineJumping();
+
+
         }
     }
 
@@ -393,7 +395,14 @@ public class Player : MonoSingleton<Player>
     {
         ProcessCollision(collision);
 
-
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (timerFall >= timeFallForShake)
+            {
+                _cameraShake.ShakeCamera();
+                timerFall = 0f;
+            }
+        }
         if (collision.gameObject.CompareTag("Trampoline") && canTranpolin)
         {
             trampoline = collision.gameObject.GetComponent<PressurePad>();
@@ -406,7 +415,6 @@ public class Player : MonoSingleton<Player>
             bounceVelocity = Mathf.Min(bounceVelocity, maxBounceVelocity);
 
             // Aquí no aplicamos el rebote; solo guardamos los datos para usarlos después
-            Debug.Log("Velocidad de rebote calculada: " + bounceVelocity);
             tranpolinTimer = tranpolineCooldown;
             canTranpolin = false;
         }
@@ -416,11 +424,21 @@ public class Player : MonoSingleton<Player>
     private void OnCollisionStay2D(Collision2D collision)
     {
         ProcessCollision(collision);
+
+        if (collision.gameObject.CompareTag("Trampoline"))
+        {
+            onTrampoline = true;
+        }
+
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+private void OnCollisionExit2D(Collision2D collision)
     {
         m_groundObjects.Remove(collision.gameObject);
+        if (collision.gameObject.CompareTag("Trampoline"))
+        {
+            onTrampoline = false;
+        }
     }
 
     private void ProcessCollision(Collision2D collision)
@@ -456,11 +474,7 @@ public class Player : MonoSingleton<Player>
                             m_state = State.Idle;
                         }
 
-                        if (timerFall >= timeFallForShake)
-                        {
-                            _cameraShake.ShakeCamera();
-                            timerFall = 0f;
-                        }
+
                         
                     }
                 }

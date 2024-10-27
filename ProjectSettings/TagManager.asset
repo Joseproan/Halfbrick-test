@@ -8,6 +8,7 @@ TagManager:
   - Spikes
   - FxTemporaire
   - Trampoline
+  - Ground
   layers:
   - Default
   - TransparentFX

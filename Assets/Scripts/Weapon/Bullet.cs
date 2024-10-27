@@ -10,12 +10,15 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D m_rigidBody = null;
     private Vector2 m_vel = new Vector2(0, 0);
     [SerializeField] private GameObject collisionFx;
+    [SerializeField] private GameObject collisionFx2;
 
+    [HideInInspector] public GameObject owner;
     // Start is called before the first frame update
     void Start()
     {
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
         transform.rotation = Quaternion.Euler(0, 0, 90);
+        owner = this.gameObject;
     }
 
     // Update is called once per frame
@@ -36,6 +39,10 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ProcessCollision(collision);
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Instantiate(collisionFx, this.transform.position, Quaternion.identity);
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -64,7 +71,6 @@ public class Bullet : MonoBehaviour
                 pos.y += impulse.y;
 
                 //Is this a wall, or an enemy?
-                Instantiate(collisionFx, this.transform.position, Quaternion.identity);
                 Destroy(gameObject);
                 //ObjectPooler.Instance.ReturnObject(gameObject);
             }

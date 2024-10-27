@@ -5082,7 +5082,7 @@ GameObject:
   - component: {fileID: 2299155172676690839}
   m_Layer: 9
   m_Name: Projectile
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5233,5 +5233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_moveSpeed: 90
   m_hitDamage: 1
-  collisionFx: {fileID: 5904719056005892913, guid: 42b8b187152a35c47904b8cdacfbe7f1,
+  collisionFx: {fileID: 100000, guid: 1aae9e7a1560b4d269853411750149b6, type: 3}
+  collisionFx2: {fileID: 3719875545375078249, guid: 2e29b42d09f684d829a76ba4f16f1250,
     type: 3}
+  owner: {fileID: 0}

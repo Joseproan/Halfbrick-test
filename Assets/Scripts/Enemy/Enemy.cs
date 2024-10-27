@@ -22,7 +22,15 @@ public class Enemy : MonoBehaviour
     private float m_timer = 0.0f;
     private float m_lastPlayerDiff = 0.0f;
     private Vector2 m_vel = new Vector2(0, 0);
-
+    
+    //Bullets
+    internal Vector3 bulletPosition;
+    [SerializeField] private float pushX = 1f;
+    [SerializeField] private float pushY = 1f;
+    [SerializeField] private Color damagedColor;
+    private SpriteRenderer enemyRenderer;
+    private Color mainColor;
+    [SerializeField] private GameObject getHitFx;
     
     private enum WallCollision
     {
@@ -38,6 +46,7 @@ public class Enemy : MonoBehaviour
         Walking,
         Charging,
         ChargingCooldown,
+        KnockUp
     };
     private State m_state = State.Idle;
 
@@ -47,14 +56,13 @@ public class Enemy : MonoBehaviour
         m_health = m_maxHealth;
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
         gameManager = GameManager.instance;
+        enemyRenderer = GetComponent<SpriteRenderer>();
+        mainColor = enemyRenderer.color;
     }
 
     private void Update()
     {
-        if(m_player == null)
-        {
-            m_player = gameManager.playerClone.GetComponent<Player>();
-        }
+     
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -73,22 +81,48 @@ public class Enemy : MonoBehaviour
             case State.ChargingCooldown:
                 ChargingCooldown();
                 break;
+            case State.KnockUp:
+                KnockUp();
+                break;
             default:
                 break;
         }
 
         m_wallFlags = WallCollision.None;
     }
-
     public void InflictDamage(float damageAmount)
     {
+        Debug.Log("entra");
         m_health -= damageAmount;
         if(m_health <= 0.0f)
         {
             GameObject.Destroy(gameObject);
         }
     }
+    void KnockUp()
+    {
+        // Calcula la dirección de retroceso desde el punto de ataque hacia el jugador
+        Vector2 knockbackDirection = (transform.position - new Vector3(bulletPosition.x, bulletPosition.y)).normalized;
 
+        // Aplica el retroceso usando la dirección calculada y la fuerza del retroceso
+        m_vel.x = knockbackDirection.x * pushX;
+        m_vel.y = knockbackDirection.y * pushY;
+
+        ApplyVelocity();
+    
+        // Si quieres que el retroceso tenga un tiempo limitado, puedes usar un temporizador
+        StartCoroutine(EndKnockbackAfterDelay(0.2f)); // 0.2f es la duración del retroceso
+    }
+    IEnumerator EndKnockbackAfterDelay(float duration)
+    {
+        enemyRenderer.color = damagedColor;
+        
+        yield return new WaitForSeconds(duration);
+        enemyRenderer.color = mainColor;
+        m_vel = Vector2.zero;
+        
+        m_state = State.Idle; // Si está en el suelo
+    }
     void Idle()
     {
         m_vel = Vector2.zero;
@@ -187,6 +221,14 @@ public class Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ProcessCollision(collision);
+
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            Instantiate(getHitFx, this.transform.position, Quaternion.identity);
+            Bullet bullet = collision.gameObject.GetComponent<Bullet>();
+            bulletPosition = bullet.owner.transform.position;
+            m_state = State.KnockUp;
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)

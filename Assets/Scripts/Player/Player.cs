@@ -79,6 +79,7 @@ public class Player : MonoSingleton<Player>
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
         _cameraShake = GameObject.Find("VirtualCamera").GetComponent<CameraShake>();
         timerFall = 0.1f;
+        
     }
 
     private void Update()

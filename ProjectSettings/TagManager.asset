@@ -9,6 +9,7 @@ TagManager:
   - FxTemporaire
   - Trampoline
   - Ground
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Quaternion = System.Numerics.Quaternion;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,12 +55,13 @@ public class GameManager : MonoBehaviour
     {
         if(playerDeath)
         {
-            playerClone = Instantiate(playerPrefab, playerInitialPos);
+            playerClone = Instantiate(playerPrefab, getPlayerInitialPos);
             cinemachineCamera.Follow = playerClone.transform;
             playerDeath = false;
 
             if(enemyKilled)
             {
+                Debug.Log("ola");
                 enemyClone = Instantiate(enemyPrefab, enemyInitialPos);
                 enemyKilled = false;
             }

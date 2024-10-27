@@ -5,6 +5,7 @@ using UnityEngine;
 public class WeaponPickup : MonoBehaviour
 {
     GameManager gameManager;
+    [SerializeField] private GameObject powerUpFlashPrefab;
 
     private void Start()
     {
@@ -13,6 +14,8 @@ public class WeaponPickup : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player.Instance.GiveWeapon();
+        GameObject powerUpFlash = Instantiate(powerUpFlashPrefab,transform.position, Quaternion.identity);
+        Destroy(powerUpFlash,1.5f);
         gameManager.pickedPowerUp = true;
         GameObject.Destroy(gameObject);
     }

@@ -58,6 +58,8 @@ public class Player : MonoSingleton<Player>
     [SerializeField] private float tranpolineCooldown = 1f;
     private float tranpolinTimer;
     private bool canTranpolin;
+
+    public GameObject bulletPrefab;
     private enum State
     {
         Idle = 0,
@@ -86,7 +88,7 @@ public class Player : MonoSingleton<Player>
         if (m_shootPressed && m_hasWeapon)
         {
             //Fire
-            GameObject projectileGO = ObjectPooler.Instance.GetObject("Bullet");
+            GameObject projectileGO = Instantiate(bulletPrefab, transform.position,Quaternion.identity); //ObjectPooler.Instance.GetObject("Projectile");
             if (projectileGO)
             {
                 projectileGO.GetComponent<Bullet>().Fire(transform.position, m_fireRight);

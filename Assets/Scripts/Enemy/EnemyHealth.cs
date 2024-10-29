@@ -104,6 +104,7 @@ public class EnemyHealth : MonoBehaviour
             agent.enabled = true;
             stunned = false;
             onlyOnce = false;
+            health = maxHealth;
         }
         else stunTimer -= Time.deltaTime;
     }
@@ -116,7 +117,7 @@ public class EnemyHealth : MonoBehaviour
             enemyDamage.enabled = false;
         }
         invencibleTimer = inmuneTime;
-        Instantiate(bulletHitFx, transform.position, Quaternion.identity);
+        //Instantiate(bulletHitFx, transform.position, Quaternion.identity);
         StartCoroutine(DamagedColor());
     }
 

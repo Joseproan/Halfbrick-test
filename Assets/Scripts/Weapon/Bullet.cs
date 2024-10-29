@@ -46,7 +46,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ProcessCollision(collision);
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject)
         {
             Instantiate(collisionFx, this.transform.position, Quaternion.identity);
         }

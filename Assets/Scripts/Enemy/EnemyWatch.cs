@@ -91,7 +91,7 @@ public class EnemyWatch : MonoBehaviour
         }
 
 
-        if ((!death || !_enemyHealth.stunned) && playerPos != null) FollowPlayer();
+        if ((!death || !_enemyHealth.stunned || !_enemyHealth.pushBack) && playerPos != null) FollowPlayer();
 
 
     }

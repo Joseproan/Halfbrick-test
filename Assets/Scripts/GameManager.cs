@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     public bool restartScene;
     public bool killEnemy;
     public GameObject enemy;
+
+    public GameObject pausePanel;
+    internal bool isPause;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -56,6 +59,13 @@ public class GameManager : MonoBehaviour
         PlayerRespawn();
         if(killEnemy) Destroy(enemy);
         if(restartScene) fadeAnimator.SetTrigger("FadeIn");
+
+        if (Input.GetKey(KeyCode.Escape) && !isPause)
+        {
+            isPause = !isPause;
+            pausePanel.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 
     public void PlayerRespawn()

@@ -5239,4 +5239,4 @@ MonoBehaviour:
     type: 3}
   owner: {fileID: 0}
   damage: 1
-  pushForce: 30
+  pushForce: 50

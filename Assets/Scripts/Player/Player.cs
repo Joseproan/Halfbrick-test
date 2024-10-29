@@ -137,7 +137,7 @@ public class Player : MonoSingleton<Player>
             m_fireRight = false;
         }
         if(_playerHealth.pushBack) m_state = State.Knock;
-        if (trampoline != null && trampoline.startJump)
+        if (trampoline != null && trampoline.startJump && onTrampoline)
         {
             m_state = State.Trampolin; // Cambia el estado al usar el trampolín
             m_trampolineStateTimer = 0f; // Reinicia el temporizador de estado del trampolín
@@ -146,8 +146,14 @@ public class Player : MonoSingleton<Player>
             // Aplica la lógica de rebote usando la velocidad guardada
             m_vel.y = bounceVelocity;
             if(onTrampoline) TrampolineJumping();
-
-
+        }
+        else
+        {
+            if (trampoline != null)
+            {
+                m_trampolineStateTimer = 0f; // Reinicia el temporizador de estado del trampolín
+                trampoline.startJump = false; // Resetea el trigger para futuras colisiones  
+            }
         }
     }
 

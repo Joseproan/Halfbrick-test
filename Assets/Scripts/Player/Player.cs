@@ -60,6 +60,9 @@ public class Player : MonoSingleton<Player>
     private bool canTranpolin;
 
     public GameObject bulletPrefab;
+    private GameManager _gameManager;
+    [SerializeField] private float shootCooldown = 0.5f;
+    private float shootTimer;
     private enum State
     {
         Idle = 0,
@@ -67,7 +70,8 @@ public class Player : MonoSingleton<Player>
         Jumping,
         Walking,
         Knock,
-        Trampolin
+        Trampolin,
+        KnockUpBullet
     };
 
     private State m_state = State.Idle;
@@ -79,23 +83,30 @@ public class Player : MonoSingleton<Player>
         m_rigidBody = transform.GetComponent<Rigidbody2D>();
         _cameraShake = GameObject.Find("VirtualCamera").GetComponent<CameraShake>();
         timerFall = 0.1f;
-        
+        _gameManager = GameManager.instance;
     }
 
     private void Update()
     {
         UpdateInput();
 
-        if (m_shootPressed && m_hasWeapon)
+        if (m_shootPressed && m_hasWeapon && shootTimer <= 0)
         {
             //Fire
             _cameraShake.ShakeCameraMini();
-            GameObject projectileGO = Instantiate(bulletPrefab, transform.position,Quaternion.identity); //ObjectPooler.Instance.GetObject("Projectile");
+            GameObject projectileGO =
+                Instantiate(bulletPrefab, transform.position,
+                    Quaternion.identity); //ObjectPooler.Instance.GetObject("Projectile");
             if (projectileGO)
             {
                 projectileGO.GetComponent<Bullet>().Fire(transform.position, m_fireRight);
             }
+
+            shootTimer = shootCooldown;
+            _cameraShake.ShakeCameraMini();
+            m_state = State.KnockUpBullet;
         }
+        else shootTimer -= Time.deltaTime;
 
         if(tranpolinTimer <= 0)
         {
@@ -124,6 +135,9 @@ public class Player : MonoSingleton<Player>
                 break;
             case State.Trampolin:
                 TrampolineJumping();
+                break;
+            case State.KnockUpBullet:
+                KnockUpBullet();
                 break;
             default:
                 break;
@@ -351,7 +365,21 @@ public class Player : MonoSingleton<Player>
             return;
         }
     }
+    void KnockUpBullet()
+    {
+        // Calcula la dirección de retroceso hacia la derecha o izquierda
+        Vector2 knockbackDirection = m_fireRight ? Vector2.left : Vector2.right;
 
+
+        // Aplica el retroceso usando la dirección calculada y la fuerza del retroceso
+        m_vel.x = knockbackDirection.x * 0.5f;
+        m_vel.y = knockbackDirection.y * 0.5f; // Impulso hacia arriba o en Y
+
+        ApplyVelocity();
+
+        // Si quieres que el retroceso tenga un tiempo limitado, puedes usar un temporizador
+        StartCoroutine(EndKnockbackAfterDelay(0.1f)); // 0.2f es la duración del retroceso
+    }
     void KnockUp()
     {
         // Calcula la dirección de retroceso desde el punto de ataque hacia el jugador
@@ -399,6 +427,8 @@ public class Player : MonoSingleton<Player>
         m_jumpPressed = Input.GetKeyDown(KeyCode.UpArrow);
         m_jumpHeld = Input.GetKey(KeyCode.UpArrow);
         m_shootPressed = Input.GetKeyDown(KeyCode.Space);
+        _gameManager.restartScene = Input.GetKeyDown(KeyCode.R);
+        _gameManager.killEnemy = Input.GetKeyDown(KeyCode.K);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

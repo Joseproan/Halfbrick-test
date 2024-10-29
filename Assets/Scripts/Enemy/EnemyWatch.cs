@@ -98,25 +98,28 @@ public class EnemyWatch : MonoBehaviour
 
     void FollowPlayer()
     {
-        if (agent.enabled == false) agent.enabled = true;
-        if (playerPos != null) distanceToPlayer = Vector3.Distance(transform.position, playerPos.position);
-        else
+        if (agent.enabled)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
-            playerPos = player.transform;
-        }
-        // Si la distancia es mayor que el m�nimo, el enemigo persigue al jugador
-        if (distanceToPlayer > minDistance)
-        {
-            agent.isStopped = false; 
-            agent.SetDestination(playerPos.position);
-        }
-        else
-        {
-            // Detiene al agente si est� dentro de la distancia m�nima
-            agent.isStopped = true; 
+            if (playerPos != null) distanceToPlayer = Vector3.Distance(transform.position, playerPos.position);
+            else
+            {
+                player = GameObject.FindGameObjectWithTag("Player");
+                playerPos = player.transform;
+            }
+            // Si la distancia es mayor que el m�nimo, el enemigo persigue al jugador
+            if (distanceToPlayer > minDistance)
+            {
+                agent.isStopped = false; 
+                agent.SetDestination(playerPos.position);
+            }
+            else
+            {
+                // Detiene al agente si est� dentro de la distancia m�nima
+                agent.isStopped = true; 
             
+            }
         }
+
     }
 
     void Explosion()

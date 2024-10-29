@@ -89,7 +89,7 @@ public class EnemyHealth : MonoBehaviour
         if (stunned && !onlyOnce)
         {
             agent.enabled = false;
-            rb2d.gravityScale = 10f;
+            rb2d.gravityScale = 20f;
             _weakPoint.SetActive(true);
             stunTimer = stunTime;
             onlyOnce = true;

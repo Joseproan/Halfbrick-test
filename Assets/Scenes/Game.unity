@@ -482,7 +482,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -782,7 +782,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -2837,7 +2837,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -3127,7 +3127,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -3350,7 +3350,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -3497,7 +3497,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -3567,6 +3567,9 @@ MonoBehaviour:
     type: 3}
   getPowerUpPos: {fileID: 555547920}
   fadeAnimator: {fileID: 1795551585}
+  restartScene: 0
+  killEnemy: 0
+  enemy: {fileID: 2070607081}
 --- !u!4 &1578161453
 Transform:
   m_ObjectHideFlags: 0
@@ -3786,7 +3789,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -3933,7 +3936,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -4472,8 +4475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shakeIntensity: 50
   shakeTime: 0.2
-  shakeBulletIntensity: 0.5
-  shakeBulletTime: 0.1
+  shakeBulletIntensity: 20
+  shakeBulletTime: 0.2
 --- !u!1 &1822390432
 GameObject:
   m_ObjectHideFlags: 0
@@ -4896,7 +4899,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -5128,7 +5131,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 414decbd53777644a8c641c4a76d6f11, type: 3}
   m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
   m_FlipX: 0
@@ -5206,7 +5209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 92218861760985, guid: e2a137d316808401bbee2abcb2ad3917, type: 3}
       propertyPath: maxHealth
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 92218861760985, guid: e2a137d316808401bbee2abcb2ad3917, type: 3}
       propertyPath: _weakPoint
@@ -5219,7 +5222,7 @@ PrefabInstance:
     - target: {fileID: 92218861760985, guid: e2a137d316808401bbee2abcb2ad3917, type: 3}
       propertyPath: bulletHitFx
       value: 
-      objectReference: {fileID: 1429954232896169633, guid: b422d4317bedd4cbb952e5d2ab866afa,
+      objectReference: {fileID: 725748389856807714, guid: 1d479c216bae6456883703b0c5f49e1a,
         type: 3}
     - target: {fileID: 221846802766102662, guid: e2a137d316808401bbee2abcb2ad3917,
         type: 3}
@@ -5240,6 +5243,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BaseOffset
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 902184760434752945, guid: e2a137d316808401bbee2abcb2ad3917,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 902184760434752945, guid: e2a137d316808401bbee2abcb2ad3917,
         type: 3}
@@ -5459,6 +5467,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3326923477774022988, guid: e283a7155e82eda4c858621543353963,
+        type: 3}
+      propertyPath: m_jumpVel
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3326923477774022988, guid: e283a7155e82eda4c858621543353963,
+        type: 3}
+      propertyPath: m_jumpMaxTime
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 7079044808937790767, guid: e283a7155e82eda4c858621543353963,
         type: 3}

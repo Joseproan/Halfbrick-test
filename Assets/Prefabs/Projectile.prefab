@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69971970764047999}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2083552393836211383}
@@ -5096,7 +5096,7 @@ Transform:
   m_GameObject: {fileID: 8561339431563623733}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -19.8, y: 15.81, z: -5}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4237313906233638217}
@@ -5233,8 +5233,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_moveSpeed: 90
   m_hitDamage: 1
-  collisionFx: {fileID: 100000, guid: 1aae9e7a1560b4d269853411750149b6, type: 3}
-  collisionFx2: {fileID: 3719875545375078249, guid: 2e29b42d09f684d829a76ba4f16f1250,
+  collisionFx: {fileID: 725748389856807714, guid: 1d479c216bae6456883703b0c5f49e1a,
+    type: 3}
+  collisionFx2: {fileID: 725748389856807714, guid: 1d479c216bae6456883703b0c5f49e1a,
     type: 3}
   owner: {fileID: 0}
   damage: 1

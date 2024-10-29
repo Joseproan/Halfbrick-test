@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     internal bool pickedPowerUp;
     internal bool enemyKilled;
     public Animator fadeAnimator;
+    public bool restartScene;
+    public bool killEnemy;
+    public GameObject enemy;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
         playerInitialPos = getPlayerInitialPos;
         enemyInitialPos = getEnemyPos;
         powerUpInitialPos = getPowerUpPos;
+        restartScene = false;
         //fadeAnimator.SetTrigger("FadeOut");
     }
 
@@ -50,6 +54,8 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         PlayerRespawn();
+        if(killEnemy) Destroy(enemy);
+        if(restartScene) fadeAnimator.SetTrigger("FadeIn");
     }
 
     public void PlayerRespawn()

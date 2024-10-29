@@ -376,16 +376,15 @@ public class Player : MonoSingleton<Player>
         m_vel.y = knockbackDirection.y * 0.5f; // Impulso hacia arriba o en Y
 
         ApplyVelocity();
-
-        // Si quieres que el retroceso tenga un tiempo limitado, puedes usar un temporizador
-        StartCoroutine(EndKnockbackAfterDelay(0.1f)); // 0.2f es la duración del retroceso
+        
+        StartCoroutine(EndKnockbackAfterDelay(0.15f)); // 0.2f es la duración del retroceso
     }
     void KnockUp()
     {
         // Calcula la dirección de retroceso desde el punto de ataque hacia el jugador
         Vector2 knockbackDirection = (transform.position - new Vector3(_playerHealth.attackPosition.x, _playerHealth.attackPosition.y)).normalized;
 
-        // Aplica el retroceso usando la dirección calculada y la fuerza del retroceso
+        // Retroceso
         m_vel.x = knockbackDirection.x * 0.75f;
         m_vel.y = knockbackDirection.y * 0.75f;
 

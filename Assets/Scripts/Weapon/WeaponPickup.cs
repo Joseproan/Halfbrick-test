@@ -13,10 +13,13 @@ public class WeaponPickup : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Player.Instance.GiveWeapon();
-        GameObject powerUpFlash = Instantiate(powerUpFlashPrefab,transform.position, Quaternion.identity);
-        Destroy(powerUpFlash,1.5f);
-        gameManager.pickedPowerUp = true;
-        GameObject.Destroy(gameObject);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Player.Instance.GiveWeapon();
+            GameObject powerUpFlash = Instantiate(powerUpFlashPrefab,transform.position, Quaternion.identity);
+            Destroy(powerUpFlash,1.5f);
+            gameManager.pickedPowerUp = true;
+            GameObject.Destroy(gameObject);  
+        }
     }
 }

@@ -13,6 +13,13 @@ public class Bullet : MonoBehaviour
     [SerializeField] private GameObject collisionFx2;
 
     [HideInInspector] public GameObject owner;
+    public int damage;
+    public float pushForce;
+    
+    public void SetPushForce(float s)
+    {
+        pushForce = s;
+    }
     // Start is called before the first frame update
     void Start()
     {

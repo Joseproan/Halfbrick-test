@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,7 +19,20 @@ public class EnemyWatch : MonoBehaviour
     [SerializeField] private float speed;
 
     public float minDistance = 2.0f;
-    // Start is called before the first frame update
+    private float distanceToPlayer;
+    
+    //Explosion
+    [SerializeField] private GameObject explosionFx; 
+    [SerializeField] private GameObject explosionCollider; 
+    [SerializeField] private float explosionColldierDuration;
+
+    private EnemyHealth _enemyHealth;
+
+    private void Awake()
+    {
+        _enemyHealth = GetComponent<EnemyHealth>();
+    }
+
     void Start()
     {
         explosionTimer = timeBetweenExplosion;
@@ -38,6 +52,7 @@ public class EnemyWatch : MonoBehaviour
         if (explosionTimer <= 0)
         {
             explosionTimer = timeBetweenExplosion;
+            Explosion();
             explosion = true;
         }
         else
@@ -50,17 +65,31 @@ public class EnemyWatch : MonoBehaviour
 
     void FollowPlayer()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, playerPos.position);
-
-        // Si la distancia es mayor que el mínimo, el enemigo persigue al jugador
-        if (distanceToPlayer > minDistance)
+        
+        if (playerPos != null) distanceToPlayer = Vector3.Distance(transform.position, playerPos.position);
+        else
         {
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerPos = player.transform;
+        }
+        // Si la distancia es mayor que el mï¿½nimo, el enemigo persigue al jugador
+        if (distanceToPlayer > minDistance && !_enemyHealth.stunned && !_enemyHealth.pushBack)
+        {
+            agent.isStopped = false; 
             agent.SetDestination(playerPos.position);
         }
         else
         {
-            // Detiene al agente si está dentro de la distancia mínima
-            agent.SetDestination(this.transform.position);
+            // Detiene al agente si estï¿½ dentro de la distancia mï¿½nima
+            agent.isStopped = true; 
+            
         }
+    }
+
+    void Explosion()
+    {
+        Instantiate(explosionFx, transform.position, Quaternion.identity);
+        GameObject explosion = Instantiate(explosionCollider, transform.position, Quaternion.identity);
+        Destroy(explosion,explosionColldierDuration);
     }
 }

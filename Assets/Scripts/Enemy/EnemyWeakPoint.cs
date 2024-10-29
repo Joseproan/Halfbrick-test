@@ -8,7 +8,8 @@ public class EnemyWeakPoint : MonoBehaviour
     private GameManager gameManager;
 
     [HideInInspector] public bool weakPoint;
-    public EnemyDamage enemyDamage;
+    public GameObject enemy;
+    public Animator enemyAnim;
     private void Start()
     {
         gameManager = GameManager.instance;
@@ -22,10 +23,8 @@ public class EnemyWeakPoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SetEnemyWeakPoint(true);
-            enemyDamage.enabled = false;
-            gameManager.enemyKilled = true;
-            Destroy(enemyDamage.gameObject);
+            enemyAnim.SetTrigger("Death");
+            //Destroy(enemy.gameObject);
         }
     }
 }

@@ -28,9 +28,21 @@ public class EnemyWatch : MonoBehaviour
 
     private EnemyHealth _enemyHealth;
 
+    [Header("Colors")]
+    [SerializeField] private Color dangerColor;
+    private Color basicColor;
+
+    private Animator anim;
+    float secondCounter = 0f;
+
+    [SerializeField]
+    private GameObject deathFx;
+
+    private bool death;
     private void Awake()
     {
         _enemyHealth = GetComponent<EnemyHealth>();
+        anim = GetComponent<Animator>();
     }
 
     void Start()
@@ -42,6 +54,7 @@ public class EnemyWatch : MonoBehaviour
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         agent.speed = speed;
+        basicColor = timerText.color;
     }
 
     // Update is called once per frame
@@ -60,11 +73,25 @@ public class EnemyWatch : MonoBehaviour
             else
             {
                 explosionTimer -= Time.deltaTime;
+                if (explosionTimer < 4)
+                {
+                    timerText.color = dangerColor;
+                    secondCounter += Time.deltaTime;
+
+                    if (secondCounter >= 1f) // Cada segundo
+                    {
+                        secondCounter = 0f; // Reinicia el contador para el siguiente segundo
+                        anim.SetTrigger("Warning"); // Activa el trigger de la animación
+                    }
+                }
+                else timerText.color = basicColor;
+                
+
             }
         }
 
 
-        if (!_enemyHealth.stunned && playerPos != null) FollowPlayer();
+        if ((!death || !_enemyHealth.stunned) && playerPos != null) FollowPlayer();
 
 
     }
@@ -97,5 +124,11 @@ public class EnemyWatch : MonoBehaviour
         Instantiate(explosionFx, transform.position, Quaternion.identity);
         GameObject explosion = Instantiate(explosionCollider, transform.position, Quaternion.identity);
         Destroy(explosion,explosionColldierDuration);
+    }
+
+    public void Death()
+    {
+        Instantiate(deathFx, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

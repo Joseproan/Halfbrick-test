@@ -89,6 +89,7 @@ public class Player : MonoSingleton<Player>
         if (m_shootPressed && m_hasWeapon)
         {
             //Fire
+            _cameraShake.ShakeCameraMini();
             GameObject projectileGO = Instantiate(bulletPrefab, transform.position,Quaternion.identity); //ObjectPooler.Instance.GetObject("Projectile");
             if (projectileGO)
             {

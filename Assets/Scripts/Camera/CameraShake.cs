@@ -10,6 +10,9 @@ public class CameraShake : MonoBehaviour
     private CinemachineVirtualCamera cinemachineCam;
     [SerializeField] private float shakeIntensity = 1f;
     [SerializeField] private float shakeTime = 0.2f;
+    
+    [SerializeField] private float shakeBulletIntensity = 1f;
+    [SerializeField] private float shakeBulletTime = 0.2f;
 
     private float timer;
     private CinemachineBasicMultiChannelPerlin _cbmcp;
@@ -29,6 +32,12 @@ public class CameraShake : MonoBehaviour
         _cbmcp = cinemachineCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         _cbmcp.m_AmplitudeGain = shakeIntensity;
         timer = shakeTime;
+    }
+    public void ShakeCameraMini()
+    {
+        _cbmcp = cinemachineCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        _cbmcp.m_AmplitudeGain = shakeBulletIntensity;
+        timer = shakeBulletTime;
     }
 
     void StopShake()

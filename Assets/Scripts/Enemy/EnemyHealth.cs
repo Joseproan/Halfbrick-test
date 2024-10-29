@@ -36,13 +36,16 @@ public class EnemyHealth : MonoBehaviour
     private SpriteRenderer playerRenderer;
     private NavMeshAgent agent;
     [SerializeField] private GameObject _weakPoint;
+    [SerializeField] private GameObject bulletHitFx;
 
+    private EnemyDamage enemyDamage;
     private bool onlyOnce;
     
     void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
         agent = GetComponent<NavMeshAgent>();
+        enemyDamage = GetComponent<EnemyDamage>();
     }
 
     private void Start()
@@ -56,10 +59,10 @@ public class EnemyHealth : MonoBehaviour
     {
         Invencibility();
         Stunned();
-        Debug.Log(stunTimer);
     }
     private void FixedUpdate()
     {
+        /*
         if (pushBack)
         {
             agent.isStopped = true;
@@ -69,7 +72,7 @@ public class EnemyHealth : MonoBehaviour
             rb2d.AddForce(direction * pushForce, ForceMode2D.Impulse);
             pushBack = false;
             agent.isStopped = false;
-        }
+        }*/
     }
 
     void Invencibility()
@@ -85,7 +88,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (stunned && !onlyOnce)
         {
-            agent.isStopped = true;
+            agent.enabled = false;
             rb2d.gravityScale = 10f;
             _weakPoint.SetActive(true);
             stunTimer = stunTime;
@@ -95,9 +98,10 @@ public class EnemyHealth : MonoBehaviour
 
         if (stunTimer <= 0)
         {
+            enemyDamage.enabled = true;
             _weakPoint.SetActive(false);
             rb2d.gravityScale = 0;
-            agent.isStopped = false;
+            agent.enabled = true;
             stunned = false;
             onlyOnce = false;
         }
@@ -106,14 +110,19 @@ public class EnemyHealth : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         health -= damage;
-        if(health <= 0) stunned = true;
+        if (health <= 0)
+        {
+            stunned = true;
+            enemyDamage.enabled = false;
+        }
         invencibleTimer = inmuneTime;
+        Instantiate(bulletHitFx, transform.position, Quaternion.identity);
         StartCoroutine(DamagedColor());
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Bullet") && !invencibility)
+        if (other.gameObject.CompareTag("Bullet") && !invencibility && !stunned)
         {
             Bullet bullet = other.gameObject.GetComponent<Bullet>();
             attackPosition = bullet.owner.transform.position;

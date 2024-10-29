@@ -30,6 +30,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject deathEffect;
 
     private GameManager gameManager;
+    public EnemyHealth enemyHealth;
 
     private void Awake()
     {
@@ -53,7 +54,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Enemy") && invencibleTimer <= 0)
+        if (collision.transform.CompareTag("Enemy") && invencibleTimer <= 0 && !enemyHealth.stunned)
         {
             EnemyDamage enemyDamage = collision.gameObject.GetComponent<EnemyDamage>();
             lastAttacker = enemyDamage.owner;

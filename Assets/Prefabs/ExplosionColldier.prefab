@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 9069069404720749361}
   m_Layer: 0
   m_Name: ExplosionColldier
-  m_TagString: Spikes
+  m_TagString: Explosion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

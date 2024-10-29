@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Feedback damage")]
     private SpriteRenderer playerRenderer;
+    [SerializeField] private Image innerSliderColor;
     private Color mainColor;
     [SerializeField] Color damagedColor;
     [SerializeField] float hitColorDuration;
@@ -31,7 +33,7 @@ public class PlayerHealth : MonoBehaviour
 
     private GameManager gameManager;
     public EnemyHealth enemyHealth;
-
+    [SerializeField] private Slider healthSlider;
     private void Awake()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -75,11 +77,22 @@ public class PlayerHealth : MonoBehaviour
             pushForce = spikes.pushForce;
             ReceiveDamage(spikes.damage);
         }
+
+        if (other.transform.CompareTag("Explosion"))
+        {
+            Spikes spikes = other.gameObject.GetComponent<Spikes>();
+            lastAttacker = spikes.owner;
+            attackPosition = spikes.owner.transform.position;
+            pushBack = true;
+            pushForce = spikes.pushForce;
+            ReceiveDamage(spikes.damage);
+        }
     }
 
     public void ReceiveDamage(int damage)
     {
         health -= damage;
+        healthSlider.value = health;
         StartCoroutine(DamagedColor());
         invencibleTimer = inmuneTime;
     }
@@ -96,8 +109,10 @@ public class PlayerHealth : MonoBehaviour
 
     public IEnumerator DamagedColor()
     {
+        innerSliderColor.color = damagedColor;
         playerRenderer.color = damagedColor;
         yield return new WaitForSeconds(hitColorDuration);
+        innerSliderColor.color = mainColor;
         playerRenderer.color = mainColor;
     }
 }

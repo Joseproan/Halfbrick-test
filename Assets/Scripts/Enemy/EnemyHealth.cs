@@ -36,6 +36,8 @@ public class EnemyHealth : MonoBehaviour
     private SpriteRenderer playerRenderer;
     private NavMeshAgent agent;
     [SerializeField] private GameObject _weakPoint;
+
+    private bool onlyOnce;
     
     void Awake()
     {
@@ -81,13 +83,14 @@ public class EnemyHealth : MonoBehaviour
     }
     void Stunned()
     {
-        if (stunned)
+        if (stunned && !onlyOnce)
         {
             agent.isStopped = true;
             rb2d.gravityScale = 10f;
             _weakPoint.SetActive(true);
             stunTimer = stunTime;
-            stunned = false;
+            onlyOnce = true;
+
         }
 
         if (stunTimer <= 0)
@@ -96,6 +99,7 @@ public class EnemyHealth : MonoBehaviour
             rb2d.gravityScale = 0;
             agent.isStopped = false;
             stunned = false;
+            onlyOnce = false;
         }
         else stunTimer -= Time.deltaTime;
     }

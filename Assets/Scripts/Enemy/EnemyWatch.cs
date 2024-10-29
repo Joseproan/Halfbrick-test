@@ -49,23 +49,29 @@ public class EnemyWatch : MonoBehaviour
     {
         timerText.text = Mathf.CeilToInt(explosionTimer).ToString(); // Redondea hacia arriba
 
-        if (explosionTimer <= 0)
+        if (!_enemyHealth.stunned)
         {
-            explosionTimer = timeBetweenExplosion;
-            Explosion();
-            explosion = true;
+            if (explosionTimer <= 0)
+            {
+                explosionTimer = timeBetweenExplosion;
+                Explosion();
+                explosion = true;
+            }
+            else
+            {
+                explosionTimer -= Time.deltaTime;
+            }
         }
-        else
-        {
-            explosionTimer -= Time.deltaTime;
-        }
-        
-        FollowPlayer();
+
+
+        if (!_enemyHealth.stunned && playerPos != null) FollowPlayer();
+
+
     }
 
     void FollowPlayer()
     {
-        
+        if (agent.enabled == false) agent.enabled = true;
         if (playerPos != null) distanceToPlayer = Vector3.Distance(transform.position, playerPos.position);
         else
         {
@@ -73,7 +79,7 @@ public class EnemyWatch : MonoBehaviour
             playerPos = player.transform;
         }
         // Si la distancia es mayor que el m�nimo, el enemigo persigue al jugador
-        if (distanceToPlayer > minDistance && !_enemyHealth.stunned && !_enemyHealth.pushBack)
+        if (distanceToPlayer > minDistance)
         {
             agent.isStopped = false; 
             agent.SetDestination(playerPos.position);

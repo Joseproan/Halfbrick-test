@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     internal bool pickedPowerUp;
     internal bool enemyKilled;
+    public Animator fadeAnimator;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
         playerInitialPos = getPlayerInitialPos;
         enemyInitialPos = getEnemyPos;
         powerUpInitialPos = getPowerUpPos;
+        //fadeAnimator.SetTrigger("FadeOut");
     }
 
     // Update is called once per frame
@@ -54,6 +56,8 @@ public class GameManager : MonoBehaviour
     {
         if(playerDeath)
         {
+            fadeAnimator.SetTrigger("FadeIn");
+            /*
             playerClone = Instantiate(playerPrefab,playerInitialPos.position, Quaternion.identity);
             cinemachineCamera.Follow = playerClone.transform;
             playerDeath = false;
@@ -72,6 +76,7 @@ public class GameManager : MonoBehaviour
                 powerUpClone = Instantiate(powerUpPrefab, powerUpInitialPos.position,Quaternion.identity);
                 pickedPowerUp = false;
             }
+            */
         }
     }
 }
